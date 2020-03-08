@@ -1,0 +1,134 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+        .hideOrShow{
+            display: none;
+        }
+        .title ::before{
+            content: '';
+            display: inline-block;
+            width: 25px;
+            height: 4px;
+            border-top: dashed 1px;
+       
+        }
+        /* border-top: dotted 1px; */
+        /* 设置竖条纹和横向条纹 */
+        .sub_items{
+            margin-left: 29px;
+            border-left: dashed 1px;
+            padding-bottom: -5px;
+        }
+    </style>
+</head>
+
+<body >
+    
+     <div id="container"></div>
+      
+</body>
+<script>
+var data = [
+            {
+            name : "For Sale",
+                    child : [
+                        {
+                            name : "Appliances",
+                            child : []
+                        },
+                        {
+                            name : "Arts&Crafts",
+                            child : []
+                        },
+                        {
+                            name : "Clothing",
+                            child : [{
+                            name : "T-shirt",
+                            child : []
+                            },
+                            {
+                            name : "Scarf",
+                            child : []
+                            }]
+                        },
+                        {
+                            name : "Computers",
+                            child : []
+                        }
+                    ]
+            },
+            {
+                name : "Vehicles",
+                child : [
+                    {
+                        name : "bike",
+                        child : []
+                    },
+                    {
+                        name : "moterbike",
+                        child : []
+                    }
+                ]
+            },
+            {
+                name : "Rentals",
+                child : []
+            },
+            ]
+//先描绘好span加号内容
+//父级一起插入一个title类的div，内容就是data.name
+//然后检查插入子数据有无（不管有无均创建sub）
+//有的话就再次递归
+
+function showDataTree(data, dom){
+    let tem = document.createDocumentFragment()
+    if(Object.prototype.toString.call(data) == '[object Array]'){
+        for(let i = 0; i<data.length; i++){
+            //标题
+            var Title = document.createElement('div')
+            var span = '<span class="to_showList" value="+" >+</span>'+data[i].name 
+            
+            Title.innerHTML = '<div class="title">'+span+'</div>'
+
+            tem.appendChild(Title)
+
+            var sub_items = document.createElement('div')
+            sub_items.className = 'sub_items'
+            tem.appendChild(sub_items)
+            //递归遍历结构树
+            if(data[i].child.length > 0){
+                showDataTree(data[i].child, sub_items)
+            }
+
+        }
+    }
+     dom.appendChild(tem)
+}
+
+let container = document.body
+console.log(container)
+showDataTree(data, container)
+
+let toShow = document.getElementsByClassName('to_showList')
+
+    for(let i = 0;i < toShow.length; i++){
+        let bindom = toShow[i]
+        let dom = toShow[i].parentElement.parentElement.nextElementSibling
+        bindom.addEventListener('click', function(){
+            if(bindom.textContent=='+'){
+                bindom.textContent = '-'
+            }else{
+                bindom.textContent = '+'
+            }
+            dom.classList.toggle('hideOrShow')
+
+        })
+    }
+</script>
+</html>
